@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background-color: #0a0a0a;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-serif {
+  font-family: "Fraunces", serif;
+}
+body,
+.font-sans {
+  font-family: "Inter", sans-serif;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+* {
+  -webkit-overflow-scrolling: touch;
+}
