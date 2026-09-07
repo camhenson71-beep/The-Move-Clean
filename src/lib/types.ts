@@ -47,6 +47,11 @@ export interface EventItem extends BaseItem {
   priceMax: number;
   ticketUrl: string | null;
   officialUrl: string | null;
+  // "mock" = hand-authored demo data (src/lib/mockData.ts).
+  // "ticketmaster" = normalized live data from the Ticketmaster Discovery API
+  // (src/app/api/events/route.ts). Existing mock events all get "mock" via
+  // one wrapper in mockData.ts — no per-record changes were needed there.
+  source: "mock" | "ticketmaster";
 }
 
 export type WeeklyHours = Partial<Record<

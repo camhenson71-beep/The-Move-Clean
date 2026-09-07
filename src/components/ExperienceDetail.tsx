@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import type { Item, UserPrefs, FeedbackStore } from "@/lib/types";
 import { getVenue, haversineMiles, ORIGIN, formatDistance, formatPrice } from "@/lib/engine";
-import { ALL_ITEMS } from "@/lib/mockData";
 import { track } from "@/lib/analytics";
 import { useScored, ScorePill, BadgeRow, formatEventTime } from "./ExperienceCard";
 import ExperienceCard from "./ExperienceCard";
@@ -58,9 +57,9 @@ async function shareItem(item: Item) {
 }
 
 export default function ExperienceDetail({
-  item, prefs, feedback, now, isSaved, toggleSave, feedbackFor, record, onClose, onOpen,
+  item, prefs, feedback, now, items, isSaved, toggleSave, feedbackFor, record, onClose, onOpen,
 }: {
-  item: Item; prefs: UserPrefs; feedback: FeedbackStore; now: Date;
+  item: Item; prefs: UserPrefs; feedback: FeedbackStore; now: Date; items: Item[];
   isSaved: (id: string) => boolean; toggleSave: (id: string) => void;
   feedbackFor: (id: string) => { verdict: "good" | "bad"; reason?: string | null } | null;
   record: (id: string, verdict: "good" | "bad", reason?: string) => void;
@@ -71,7 +70,7 @@ export default function ExperienceDetail({
   const distanceMiles = haversineMiles(ORIGIN, venue);
   const isPlace = item.type === "place";
 
-  const companions = ALL_ITEMS
+  const companions = items
     .filter((e) => e.id !== item.id && e.city === "Tampa")
     .map((e) => ({ e, d: haversineMiles(getVenue(e), venue) }))
     .filter((x) => x.d <= 1.6)
@@ -84,6 +83,7 @@ export default function ExperienceDetail({
   const officialUrl = item.officialUrl;
   const ctaUrl = ticketUrl || reservationUrl || officialUrl;
   const ctaLabel = ticketUrl ? "Tickets" : reservationUrl ? "Reserve" : officialUrl ? "Official Site" : null;
+  const isLiveTicket = item.type === "event" && item.source === "ticketmaster";
 
   return (
     <div className="fixed inset-0 z-50 bg-neutral-950 text-neutral-50 overflow-y-auto">
@@ -124,9 +124,10 @@ export default function ExperienceDetail({
         {isPlace && "cuisine" in item && item.cuisine && <p className="text-xs text-neutral-500">Cuisine — {item.cuisine}</p>}
 
         {ctaUrl ? (
-          <a href={ctaUrl} onClick={() => track("cta_clicked", { itemId: item.id, label: ctaLabel })}
+          <a href={ctaUrl} target={isLiveTicket ? "_blank" : undefined} rel={isLiveTicket ? "noopener noreferrer" : undefined}
+            onClick={() => track("cta_clicked", { itemId: item.id, label: ctaLabel })}
             className="flex items-center justify-center gap-2 rounded-full bg-amber-400 text-neutral-950 py-3 font-medium">
-            <Ticket className="h-4 w-4" /> {ctaLabel} <span className="text-xs opacity-70">(demo link)</span>
+            <Ticket className="h-4 w-4" /> {ctaLabel} <span className="text-xs opacity-70">{isLiveTicket ? "(Ticketmaster)" : "(demo link)"}</span>
           </a>
         ) : (
           <div className="flex items-center justify-center gap-2 rounded-full border border-white/15 text-neutral-400 py-3 font-medium">

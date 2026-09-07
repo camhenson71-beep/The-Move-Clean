@@ -20,7 +20,10 @@ export type AnalyticsEvent =
   | "cta_clicked"
   | "feedback_good"
   | "feedback_bad"
-  | "prototype_reset";
+  | "prototype_reset"
+  | "live_inventory_loaded"
+  | "live_inventory_error"
+  | "live_inventory_empty";
 
 const RING_BUFFER_SIZE = 100;
 

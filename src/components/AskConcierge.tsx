@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { Item, UserPrefs, FeedbackStore, ScoredItem, Itinerary, AskConstraints } from "@/lib/types";
-import { ALL_ITEMS } from "@/lib/mockData";
 import { parseIntent, filterInventory, rankCandidates, buildItinerary, getVenue, formatDistance } from "@/lib/engine";
 import { track } from "@/lib/analytics";
 import ExperienceCard from "./ExperienceCard";
@@ -30,9 +29,9 @@ interface AskResult {
 }
 
 export default function AskConcierge({
-  prefs, feedback, now, saveItinerary, onOpen,
+  prefs, feedback, now, items, saveItinerary, onOpen,
 }: {
-  prefs: UserPrefs; feedback: FeedbackStore; now: Date;
+  prefs: UserPrefs; feedback: FeedbackStore; now: Date; items: Item[];
   saveItinerary: (itin: Omit<SavedItinerary, "id" | "savedAt">) => void;
   onOpen: (item: Item) => void;
 }) {
@@ -49,7 +48,7 @@ export default function AskConcierge({
     // Steps 1-3 always run in application code — the server/AI is never
     // asked to choose or score anything, only (optionally) to phrase step 4.
     const constraints = parseIntent(q, prefs);
-    const filtered = filterInventory(ALL_ITEMS, constraints, now);
+    const filtered = filterInventory(items, constraints, now);
     const ranked = rankCandidates(filtered, prefs, feedback, now, constraints);
     const picks = ranked.slice(0, 3);
     const itinerary = constraints.wantsItinerary ? buildItinerary(ranked, now) : null;

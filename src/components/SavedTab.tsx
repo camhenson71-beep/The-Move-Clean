@@ -1,18 +1,17 @@
 import React, { useMemo } from "react";
 import type { Item, UserPrefs, FeedbackStore } from "@/lib/types";
-import { ALL_ITEMS } from "@/lib/mockData";
 import type { SavedItinerary } from "@/lib/hooks";
 import ExperienceCard from "./ExperienceCard";
 import { Bookmark } from "./icons";
 
 export default function SavedTab({
-  prefs, feedback, now, savedIds, itineraries, removeItinerary, onOpen,
+  prefs, feedback, now, items, savedIds, itineraries, removeItinerary, onOpen,
 }: {
-  prefs: UserPrefs; feedback: FeedbackStore; now: Date;
+  prefs: UserPrefs; feedback: FeedbackStore; now: Date; items: Item[];
   savedIds: string[]; itineraries: SavedItinerary[]; removeItinerary: (id: string) => void;
   onOpen: (item: Item) => void;
 }) {
-  const itemsById = useMemo(() => Object.fromEntries(ALL_ITEMS.map((i) => [i.id, i])), []);
+  const itemsById = useMemo(() => Object.fromEntries(items.map((i) => [i.id, i])), [items]);
   const savedItems = savedIds.map((id) => itemsById[id]).filter(Boolean);
 
   if (!savedItems.length && !itineraries.length) {

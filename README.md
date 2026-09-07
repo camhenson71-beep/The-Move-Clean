@@ -84,6 +84,7 @@ the Ask concierge, saving, feedback — with zero configuration.
 | Variable | Required? | What it does |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | No — optional | If set, the Ask concierge's reply is phrased by an AI model instead of a built-in template sentence. Everything it *recommends* is decided by application code either way — the AI (when configured) only ever writes one intro sentence over an already-decided list of picks. |
+| `TICKETMASTER_API_KEY` | No — optional | If set, Home/Ask/Saved show real upcoming Tampa events from the Ticketmaster Discovery API instead of the mock catalog, ranked by the same Move Score / For You Score logic. Falls back to mock data automatically if unset, if the request fails, or if Ticketmaster returns nothing for the demo window. Read only in `src/app/api/events/route.ts` — never sent to the browser. |
 
 **If you want to add the key:** in the Vercel dashboard, open your project →
 **Settings → Environment Variables** → add a variable named

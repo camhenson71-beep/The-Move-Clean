@@ -9,7 +9,7 @@ import type {
   BestBetResult, PersonalMatchResult, ScoredItem, Itinerary, ItineraryStep,
   FeedbackStore,
 } from "./types";
-import { VENUES } from "./mockData";
+import { VENUES as MOCK_VENUES } from "./mockData";
 
 /* ---------------------- CONFIG ---------------------- */
 
@@ -72,7 +72,18 @@ export function formatDistance(miles: number): string {
 }
 
 export function getVenue(item: Item): Venue {
-  return VENUES[item.venueId];
+  return venueRegistry[item.venueId];
+}
+
+// Mutable venue registry, seeded from the mock dataset. Live sources (e.g.
+// the Ticketmaster route/hook) call registerVenues() once their results are
+// normalized, so getVenue() above works identically for mock and live items
+// without every call site needing to know which registry an item came from.
+// This is additive — nothing about how mock data or existing scoring code
+// uses getVenue() changed.
+let venueRegistry: Record<string, Venue> = { ...MOCK_VENUES };
+export function registerVenues(venues: Record<string, Venue>): void {
+  venueRegistry = { ...venueRegistry, ...venues };
 }
 
 function startOfDay(d: Date): Date { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }

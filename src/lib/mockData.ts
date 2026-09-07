@@ -168,7 +168,7 @@ export const PLACES: PlaceItem[] = [
 ];
 
 // ---------------------- EVENTS (20) — ISO start/end, ticketed or scheduled ----------------------
-export const EVENTS: EventItem[] = [
+export const EVENTS: EventItem[] = ([
   {
     id: "e1", type: "event", title: "KAYTRANADA", city: "Tampa", category: "Nightlife", subcategory: "DJ Set",
     venueId: "v_amphitheatre", performer: "KAYTRANADA",
@@ -369,6 +369,6 @@ export const EVENTS: EventItem[] = [
     description: "The rooftop's day party rolls into a full DJ set after dark.",
     bestBetComponents: { significance: 70, venueQuality: 75, demand: 78, socialBuzz: 74, uniqueness: 58, value: 70 },
   },
-];
+] as Omit<EventItem, "source">[]).map((e) => ({ ...e, source: "mock" as const }));
 
 export const ALL_ITEMS: Item[] = [...PLACES, ...EVENTS];
